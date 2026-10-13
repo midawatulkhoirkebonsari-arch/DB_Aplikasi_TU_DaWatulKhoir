@@ -129,6 +129,51 @@
             </main>
         </div>
     </div>
+<!-- KODE PENHUBUNG GOOGLE APPS SCRIPT KE INDEX.HTML -->
+    <script>
+        // 1. DARI APPS SCRIPT: Tempelkan URL Web App Anda di dalam tanda petik di bawah ini
+        const API_URL = "https://script.google.com/macros/s/AKfycbzOzUqnCSga1CznI3KIqyDXCbDGhaVtmZXR3LHxSA_w-NdVrqD_rGvmdtcPigu__Jxs/exec"; 
 
+        // 2. Fungsi untuk mengambil data Pegawai dari Google Sheets
+        function muatDataPegawai() {
+            console.log("Sedang mengambil data...");
+            
+            // Panggil URL Apps Script dengan action 'getPegawai'
+            fetch(API_URL + "?action=getPegawai")
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Data Pegawai Diterima:", data);
+                    
+                    // Hilangkan baris pertama (Judul Kolom / Header)
+                    const dataBaris = data.slice(1);
+                    
+                    // Tampilkan jumlah pegawai di elemen HTML
+                    document.getElementById("total-pegawai").innerText = dataBaris.length + " Orang";
+                })
+                .catch(error => {
+                    console.error("Gagal mengambil data:", error);
+                });
+        }
+
+        // 3. Fungsi untuk mengambil data Siswa dari Google Sheets
+        function muatDataSiswa() {
+            fetch(API_URL + "?action=getSiswa")
+                .then(response => response.json())
+                .then(data => {
+                    const dataBaris = data.slice(1);
+                    document.getElementById("total-siswa").innerText = dataBaris.length + " Siswa";
+                })
+                .catch(error => {
+                    console.error("Gagal mengambil data siswa:", error);
+                });
+        }
+
+        // Jalankan fungsi otomatis saat halaman web dibuka
+        window.onload = function() {
+            muatDataPegawai();
+            muatDataSiswa();
+        };
+    </script>
 </body>
 </html>
+
