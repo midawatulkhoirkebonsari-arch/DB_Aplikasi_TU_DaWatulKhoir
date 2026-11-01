@@ -3,11 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Staf TU - SI-MADRASAH</title>
+    <title>Dashboard Staf TU - Persuratan & AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @media print {
+            body * { visibility: hidden; }
+            #area-cetak-surat, #area-cetak-surat * { visibility: visible; }
+            #area-cetak-surat { position: absolute; left: 0; top: 0; width: 100%; }
+            .no-print { display: none !important; }
+        }
+    </style>
     <script>
-        // Pengecekan Keamanan: Jika belum login, lempar kembali ke halaman login
         if (localStorage.getItem('status_login') !== 'TU_AKTIF') {
             alert('Akses ditolak! Silakan login terlebih dahulu.');
             window.location.href = 'login.html';
@@ -18,8 +25,8 @@
 
     <div class="flex h-screen overflow-hidden">
         
-        <!-- SIDEBAR / MENU KHUSUS TU -->
-        <div class="w-64 bg-emerald-900 text-white flex flex-col">
+        <!-- SIDEBAR -->
+        <div class="w-64 bg-emerald-900 text-white flex flex-col no-print">
             <div class="p-5 text-lg font-bold border-b border-emerald-800 flex items-center space-x-3">
                 <i class="fa-solid fa-shield-halved text-yellow-400 text-2xl"></i>
                 <div>
@@ -30,10 +37,10 @@
             
             <nav class="flex-1 p-4 space-y-2 overflow-y-auto text-sm">
                 <a href="dashboard-tu.html" class="block p-3 rounded-lg bg-emerald-800 text-white font-medium">
-                    <i class="fa-solid fa-gauge w-6"></i> Beranda Admin
+                    <i class="fa-solid fa-envelope-open-text w-6"></i> Modul Persuratan & AI
                 </a>
                 <a href="index.html" target="_blank" class="block p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition">
-                    <i class="fa-solid fa-globe w-6"></i> Lihat Website Publik
+                    <i class="fa-solid fa-globe w-6"></i> Buka Web Utama
                 </a>
             </nav>
 
@@ -45,41 +52,123 @@
             </div>
         </div>
 
-        <!-- KONTEN UTAMA ADMIN -->
+        <!-- KONTEN UTAMA PERSURATAN -->
         <div class="flex-1 flex flex-col overflow-y-auto">
-            <header class="bg-white shadow-sm p-4 flex justify-between items-center px-8">
-                <h1 class="text-xl font-bold text-gray-800">Manajemen Administrasi Tata Usaha</h1>
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center px-8 no-print">
+                <h1 class="text-xl font-bold text-gray-800"><i class="fa-solid fa-robot text-emerald-600 mr-2"></i> Pembuat Surat Otomatis (Persuratan TU)</h1>
                 <span class="text-sm font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                    <i class="fa-solid fa-user-gear mr-2"></i> Status: Login sebagai Staf TU
+                    <i class="fa-solid fa-user-gear mr-2"></i> Staf TU Aktif
                 </span>
             </header>
 
             <main class="p-8 space-y-6">
-                <div class="bg-emerald-50 border-l-4 border-emerald-600 p-4 rounded-r-lg shadow-sm">
-                    <h2 class="font-bold text-emerald-900 text-lg">Selamat Datang, Staf Tata Usaha!</h2>
-                    <p class="text-sm text-emerald-700 mt-1">Anda memiliki hak akses penuh untuk mengelola data lembaga, rekapitulasi pegawai, buku induk siswa, hingga agenda persuratan madrasah.</p>
+                
+                <!-- FORM GENERATOR SURAT -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-emerald-200 no-print space-y-4">
+                    <h3 class="font-bold text-emerald-900 text-md border-b pb-2"><i class="fa-solid fa-pen-to-square mr-2"></i> Form Isian Surat Resmi</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Jenis Surat</label>
+                            <select id="jenisSurat" onchange="sesuaikanFormSurat()" class="w-full border p-2.5 rounded-lg">
+                                <option value="mutasi">Surat Keterangan Mutasi Siswa</option>
+                                <option value="aktif">Surat Keterangan Siswa Aktif</option>
+                                <option value="undangan">Surat Undangan Rapat Orang Tua/Wali</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Nomor Surat Agenda</label>
+                            <input type="text" id="noSurat" value="045/MI.DK/11/2026" class="w-full border p-2.5 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Nama Siswa / Ditujukan Kepada</label>
+                            <input type="text" id="namaSubjek" placeholder="Contoh: ACHMAD FAUZI" class="w-full border p-2.5 rounded-lg">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm pt-2">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Perihal / Keterangan Tambahan</label>
+                            <input type="text" id="perihalSurat" placeholder="Contoh: Pindah ke MI Negeri 1 Lumajang" class="w-full border p-2.5 rounded-lg">
+                        </div>
+                        
+                        <!-- OPTIONAL: STEMPEL & TTD -->
+                        <div class="flex items-center space-x-6 pt-6">
+                            <label class="flex items-center space-x-2 cursor-pointer font-semibold text-emerald-900">
+                                <input type="checkbox" id="pakaiTtd" checked class="w-4 h-4 text-emerald-600 rounded">
+                                <span>Tampilkan Tanda Tangan</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer font-semibold text-emerald-900">
+                                <input type="checkbox" id="pakaiStempel" checked class="w-4 h-4 text-emerald-600 rounded">
+                                <span>Tampilkan Stempel Basah</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button onclick="buatSuratOtomatis()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold p-3 rounded-lg shadow transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Generate & Tampilkan Surat Siap Cetak</span>
+                    </button>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition">
-                        <div class="text-emerald-600 text-3xl mb-3"><i class="fa-solid fa-user-tie"></i></div>
-                        <h3 class="font-bold text-gray-800 text-lg">Kelola Data Pegawai</h3>
-                        <p class="text-xs text-gray-500 mt-1 mb-4">Tambah dan perbarui data guru serta tenaga kependidikan madrasah.</p>
-                        <a href="index.html" class="inline-block bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-emerald-800">Buka Menu Pegawai</a>
+                <!-- PREVIEW PRINTER / TAMPILAN LEMBAR SURAT RESMI -->
+                <div class="flex justify-between items-center no-print">
+                    <h2 class="font-bold text-gray-800 text-lg">Pratinjau Surat Resmi Madrasah:</h2>
+                    <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-lg shadow transition flex items-center space-x-2 text-sm">
+                        <i class="fa-solid fa-print"></i>
+                        <span>Cetak Surat (Printer / PDF)</span>
+                    </button>
+                </div>
+
+                <div id="area-cetak-surat" class="bg-white p-12 rounded-xl shadow-md border border-gray-300 max-w-4xl mx-auto text-gray-900" style="min-height: 800px;">
+                    <!-- KOP SURAT MADRASAH RESMI -->
+                    <div class="flex items-center justify-between border-b-4 border-double border-gray-900 pb-4 mb-6">
+                        <img src="logo-madrasah.png" alt="Logo" class="w-20 h-20 object-contain">
+                        <div class="text-center flex-1 px-4">
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-gray-700">YAYASAN PENDIDIKAN ISLAM DA'WATUL KHOIR</h3>
+                            <h2 class="text-2xl font-black uppercase text-emerald-900 tracking-wide">MI DA'WATUL KHOIR KEBONSARI</h2>
+                            <p class="text-xs text-gray-600 mt-1">NSM: 111235080000 | NPSN: 60700000</p>
+                            <p class="text-xs text-gray-500">Jl. Raya Kebonsari, Kec. Sumbersuko, Kab. Lumajang, Jawa Timur 67316</p>
+                        </div>
+                        <div class="w-20"></div> <!-- Penyeimbang logo -->
                     </div>
 
-                    <div class="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition">
-                        <div class="text-emerald-600 text-3xl mb-3"><i class="fa-solid fa-address-book"></i></div>
-                        <h3 class="font-bold text-gray-800 text-lg">Buku Induk Siswa</h3>
-                        <p class="text-xs text-gray-500 mt-1 mb-4">Pengelolaan profil dan data lengkap peserta didik kelas 1 sampai 6.</p>
-                        <a href="index.html" class="inline-block bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-emerald-800">Buka Buku Induk</a>
+                    <!-- ISI SURAT DINAMIS -->
+                    <div id="isiSuratDinamis" class="space-y-4 text-sm leading-relaxed px-4">
+                        <div class="text-center font-bold text-base underline uppercase" id="judulSurat">SURAT KETERANGAN MUTASI SISWA</div>
+                        <div class="text-center text-xs text-gray-600 -mt-3" id="teksNoSurat">Nomor: 045/MI.DK/11/2026</div>
+
+                        <p class="pt-4">Yang bertanda tangan di bawah ini Kepala MI Da'watul Khoir Kebonsari, Kecamatan Sumbersuko, Kabupaten Lumajang, menerangkan dengan sebenarnya bahwa:</p>
+
+                        <table class="w-full my-4 ml-6 text-sm">
+                            <tr><td class="w-40 font-semibold py-1">Nama Siswa</td><td>: <span id="outNama" class="font-bold uppercase">ACHMAD FAUZI</span></td></tr>
+                            <tr><td class="font-semibold py-1">Perihal / Alasan</td><td>: <span id="outPerihal">Pindah Sekolah</span></td></tr>
+                        </table>
+
+                        <p>Bahwa nama yang bersangkutan betul-betul murid MI Da'watul Khoir Kebonsari dan telah resmi mengajukan permohonan mutasi/pindah. Demikian surat keterangan ini dibuat untuk dipergunakan sebagaimana mestinya.</p>
                     </div>
 
-                    <div class="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition">
-                        <div class="text-emerald-600 text-3xl mb-3"><i class="fa-solid fa-envelope-open-text"></i></div>
-                        <h3 class="font-bold text-gray-800 text-lg">Agenda Persuratan & AI</h3>
-                        <p class="text-xs text-gray-500 mt-1 mb-4">Pencatatan surat masuk, keluar, dan fitur generator surat otomatis.</p>
-                        <a href="index.html" class="inline-block bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-emerald-800">Buka Persuratan</a>
+                    <!-- TANDA TANGAN & STEMPEL -->
+                    <div class="flex justify-end mt-16 px-8 relative">
+                        <div class="text-center w-64 relative">
+                            <p>Kebonsari, <span id="tglSurat">2 November 2026</span></p>
+                            <p class="font-bold">Kepala Madrasah,</p>
+                            
+                            <!-- AREA STEMPEL & TTD -->
+                            <div class="h-24 my-2 relative flex items-center justify-center">
+                                <!-- Stempel Gambar / Lingkaran Simulasi -->
+                                <div id="imgStempel" class="absolute -left-4 w-24 h-24 border-4 border-dashed border-emerald-600 rounded-full flex items-center justify-center text-emerald-600 font-bold text-xs opacity-80 transform -rotate-12">
+                                    STEMPEL<br>MADRASAH
+                                </div>
+                                <!-- Tanda Tangan -->
+                                <div id="imgTtd" class="font-serif italic text-xl font-bold text-blue-900 border-b-2 border-blue-900 px-4 py-1 transform -rotate-3">
+                                    Achmad Taufiq, S.Pd.I
+                                </div>
+                            </div>
+
+                            <p class="font-bold underline text-sm">ACHMAD TAUFIQ, S.Pd.I</p>
+                            <p class="text-xs text-gray-600">NIP. 19850101 201001 1 001</p>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -87,10 +176,37 @@
     </div>
 
     <script>
+        function buatSuratOtomatis() {
+            const jenis = document.getElementById('jenisSurat').value;
+            const noSurat = document.getElementById('noSurat').value;
+            const nama = document.getElementById('namaSubjek').value || "ACHMAD FAUZI";
+            const perihal = document.getElementById('perihalSurat').value || "-";
+
+            document.getElementById('teksNoSurat').innerText = "Nomor: " + noSurat;
+            document.getElementById('outNama').innerText = nama;
+            document.getElementById('outPerihal').innerText = perihal;
+
+            if(jenis === 'mutasi') {
+                document.getElementById('judulSurat').innerText = "SURAT KETERANGAN MUTASI SISWA";
+            } else if(jenis === 'aktif') {
+                document.getElementById('judulSurat').innerText = "SURAT KETERANGAN SISWA AKTIF";
+            } else {
+                document.getElementById('judulSurat').innerText = "SURAT UNDANGAN RESMI";
+            }
+
+            // Atur TTD dan Stempel
+            document.getElementById('imgTtd').style.display = document.getElementById('pakaiTtd').checked ? 'block' : 'none';
+            document.getElementById('imgStempel').style.display = document.getElementById('pakaiStempel').checked ? 'flex' : 'none';
+        }
+
         function logout() {
             localStorage.removeItem('status_login');
             alert('Anda telah keluar dari sistem.');
             window.location.href = 'login.html';
+        }
+
+        window.onload = function() {
+            document.getElementById('tglSurat').innerText = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
         }
     </script>
 </body>
