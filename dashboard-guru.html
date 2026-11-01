@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Guru - SI-MADRASAH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        // Keamanan: Jika belum login sebagai guru, tendang kembali ke halaman login
+        if (localStorage.getItem('status_login') !== 'GURU_AKTIF') {
+            alert('Akses ditolak! Silakan login terlebih dahulu sebagai Guru.');
+            window.location.href = 'login.html';
+        }
+    </script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- SIDEBAR GURU -->
+        <div class="w-64 bg-emerald-900 text-white flex flex-col">
+            <div class="p-5 text-lg font-bold border-b border-emerald-800 flex items-center space-x-3">
+                <i class="fa-solid fa-chalkboard-user text-yellow-400 text-2xl"></i>
+                <div>
+                    <span>PANEL GURU</span>
+                    <span class="block text-xs font-normal text-emerald-300">MI Da'watul Khoir</span>
+                </div>
+            </div>
+            
+            <nav class="flex-1 p-4 space-y-2 overflow-y-auto text-sm">
+                <a href="dashboard-guru.html" class="block p-3 rounded-lg bg-emerald-800 text-white font-medium">
+                    <i class="fa-solid fa-gauge w-6"></i> Beranda Guru
+                </a>
+                <a href="index.html" target="_blank" class="block p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition">
+                    <i class="fa-solid fa-globe w-6"></i> Lihat Website Publik
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-emerald-800">
+                <button onclick="logout()" class="w-full bg-red-600 hover:bg-red-700 text-white p-2.5 rounded-lg text-sm font-bold transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Keluar Sistem</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- KONTEN UTAMA GURU -->
+        <div class="flex-1 flex flex-col overflow-y-auto">
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center px-8">
+                <h1 class="text-xl font-bold text-gray-800">Portal Akademik & Wali Kelas</h1>
+                <span class="text-sm font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                    <i class="fa-solid fa-user-check mr-2"></i> Status: Login sebagai Dewan Guru
+                </span>
+            </header>
+
+            <main class="p-8 space-y-6">
+                <div class="bg-emerald-50 border-l-4 border-emerald-600 p-4 rounded-r-lg shadow-sm">
+                    <h2 class="font-bold text-emerald-900 text-lg">Selamat Datang, Bapak/Ibu Guru!</h2>
+                    <p class="text-sm text-emerald-700 mt-1">Gunakan panel ini untuk mengelola kehadiran siswa, pengisian nilai Rapor STS (sisipan), serta memantau perkembangan kelas binaan Anda.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border">
+                        <div class="text-emerald-600 text-3xl mb-3"><i class="fa-solid fa-file-pen"></i></div>
+                        <h3 class="font-bold text-gray-800 text-lg">Input Nilai Rapor STS (RDM-Style)</h3>
+                        <p class="text-xs text-gray-500 mt-1 mb-4">Masukkan nilai mata pelajaran atau rekap nilai tengah semester siswa.</p>
+                        <a href="index.html" class="inline-block bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-emerald-800">Buka Modul STS</a>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border">
+                        <div class="text-emerald-600 text-3xl mb-3"><i class="fa-solid fa-clipboard-user"></i></div>
+                        <h3 class="font-bold text-gray-800 text-lg">Absensi Harian Kelas</h3>
+                        <p class="text-xs text-gray-500 mt-1 mb-4">Pencatatan kehadiran siswa dan rekap ketidakhadiran di kelas Anda.</p>
+                        <a href="index.html" class="inline-block bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-emerald-800">Buka Absensi</a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('status_login');
+            alert('Anda telah keluar dari sistem.');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
