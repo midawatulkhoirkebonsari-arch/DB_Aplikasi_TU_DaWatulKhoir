@@ -12,7 +12,7 @@
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-96 text-center">
         <!-- Logo Madrasah -->
         <div class="flex justify-center mb-4">
-            <img src="logo-madrasah.png" alt="Logo Madrasah" class="w-20 h-20 object-contain rounded-full border-2 border-emerald-600 p-1 bg-emerald-50">
+            <img src="logo-madrasah.png" alt="Logo Madrasah" class="w-20 h-20 object-contain rounded-full border-2 border-emerald-600 p-1 bg-emerald-50" onerror="this.src='https://via.placeholder.com/80'">
         </div>
 
         <h2 class="text-xl font-extrabold text-emerald-900">SI - MADRASAH</h2>
@@ -22,18 +22,26 @@
         <form onsubmit="prosesLogin(event)" class="space-y-4 text-left">
             <div>
                 <label class="block text-xs font-bold text-gray-700 mb-1">PILIH AKSES MASUK</label>
-                <select id="role" class="w-full border border-gray-300 p-2.5 rounded-lg text-sm focus:outline-none focus:border-emerald-600">
+                <select id="role" onchange="gantiPeran()" class="w-full border border-gray-300 p-2.5 rounded-lg text-sm focus:outline-none focus:border-emerald-600">
                     <option value="tu">Staf Tata Usaha / Admin</option>
                     <option value="guru">Dewan Guru / Wali Kelas</option>
                 </select>
             </div>
 
+            <!-- JIKA GURU: PILIH NAMA DARI DROPDOWN -->
+            <div id="divGuru" class="hidden">
+                <label class="block text-xs font-bold text-gray-700 mb-1">PILIH NAMA GURU</label>
+                <select id="pilihanGuru" class="w-full border border-gray-300 p-2.5 rounded-lg text-sm focus:outline-none focus:border-emerald-600">
+                    <option value="">-- Memuat Data Guru dari Spreadsheet... --</option>
+                </select>
+            </div>
+
             <div>
-                <label class="block text-xs font-bold text-gray-700 mb-1">MASUKKAN PIN / SANDI</label>
+                <label class="block text-xs font-bold text-gray-700 mb-1" id="labelSandi">MASUKKAN PIN STAF TU</label>
                 <input type="password" id="pin" placeholder="Masukkan PIN..." required class="w-full border border-gray-300 p-2.5 rounded-lg text-sm focus:outline-none focus:border-emerald-600">
             </div>
 
-            <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold p-2.5 rounded-lg transition text-sm">
+            <button type="submit" id="btnSubmit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold p-2.5 rounded-lg transition text-sm">
                 <i class="fa-solid fa-right-to-bracket mr-2"></i> Masuk Sistem
             </button>
         </form>
@@ -44,24 +52,89 @@
     </div>
 
     <script>
+        // Ganti dengan URL Web App Apps Script Anda yang aktif
+        const API_URL = "https://script.google.com/macros/s/AKfycbx5K4AXkv-VW-AdtCGFmXtDMvIDPhsqIkVm4DfaYrjLuVP0PJFtBPJEKKU6Ej12O7Zy/exec";
+
+        let dataGuruGlobal = [];
+
+        window.onload = function() {
+            ambilDataGuru();
+        }
+
+        // Ambil data guru dari Google Spreadsheet saat halaman dibuka
+        function ambilDataGuru() {
+            fetch(API_URL + "?action=getAkunGuru")
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.length > 1) {
+                        dataGuruGlobal = data;
+                        let select = document.getElementById('pilihanGuru');
+                        select.innerHTML = '<option value="">-- Pilih Nama Anda --</option>';
+                        
+                        // Mulai dari baris 1 (lewat baris 0 header)
+                        for (let i = 1; i < data.length; i++) {
+                            let row = data[i];
+                            let nama = row[1];  // Kolom B: Nama_Guru
+                            let kelas = row[2]; // Kolom C: Jabatan_Kelas
+                            if (nama) {
+                                select.innerHTML += `<option value="${i}">${nama} (${kelas})</option>`;
+                            }
+                        }
+                    }
+                })
+                .catch(err => console.log("Gagal memuat daftar guru:", err));
+        }
+
+        function gantiPeran() {
+            const role = document.getElementById('role').value;
+            const divGuru = document.getElementById('divGuru');
+            const labelSandi = document.getElementById('labelSandi');
+
+            if (role === 'guru') {
+                divGuru.classList.remove('hidden');
+                labelSandi.innerText = "MASUKKAN PIN / SANDI ANDA";
+            } else {
+                divGuru.classList.add('hidden');
+                labelSandi.innerText = "MASUKKAN PIN STAF TU";
+            }
+        }
+
         function prosesLogin(e) {
             e.preventDefault();
             const role = document.getElementById('role').value;
-            const pin = document.getElementById('pin').value;
+            const pinInput = document.getElementById('pin').value.trim();
 
-            // PIN Akses Masuk
-            if (role === 'tu' && pin === 'tu2026') {
-                localStorage.setItem('status_login', 'TU_AKTIF');
-                alert('Login Berhasil sebagai Staf Tata Usaha!');
-                window.location.href = 'dashboard-tu.html';
-            } 
-            else if (role === 'guru' && pin === 'guru2026') {
-                localStorage.setItem('status_login', 'GURU_AKTIF');
-                alert('Login Berhasil sebagai Dewan Guru / Wali Kelas!');
-                window.location.href = 'dashboard-guru.html'; // Mengarahkan ke halaman khusus guru
-            } 
-            else {
-                alert('PIN atau Hak Akses yang Anda masukkan salah!\n\nCatatan:\n- PIN TU: tu2026\n- PIN Guru: guru2026');
+            if (role === 'tu') {
+                if (pinInput === 'tu2026') {
+                    localStorage.setItem('status_login', 'TU_AKTIF');
+                    alert('Login Berhasil sebagai Staf Tata Usaha!');
+                    window.location.href = 'dashboard-tu.html';
+                } else {
+                    alert('PIN Staf TU salah! (Gunakan: tu2026)');
+                }
+            } else {
+                const indeksPilihan = document.getElementById('pilihanGuru').value;
+                if (!indeksPilihan) {
+                    alert('Silakan pilih nama guru terlebih dahulu!');
+                    return;
+                }
+
+                // Ambil data dari baris yang dipilih di spreadsheet
+                let row = dataGuruGlobal[indeksPilihan];
+                let pinDb = String(row[4]).trim(); // Kolom E: PIN_Sandi
+                let namaGuru = row[1];
+                let jabatanKelas = row[2];
+
+                if (pinInput === pinDb) {
+                    localStorage.setItem('status_login', 'GURU_AKTIF');
+                    localStorage.setItem('nama_guru_aktif', namaGuru);
+                    localStorage.setItem('kelas_guru_aktif', jabatanKelas);
+
+                    alert('Login Berhasil!\nSelamat Datang, ' + namaGuru + ' (' + jabatanKelas + ')');
+                    window.location.href = 'dashboard-guru.html';
+                } else {
+                    alert('PIN yang Anda masukkan salah untuk akun ' + namaGuru + '!');
+                }
             }
         }
     </script>
