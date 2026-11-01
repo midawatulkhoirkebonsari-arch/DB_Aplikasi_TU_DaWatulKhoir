@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SI-MADRASAH - MI Da'watul Khoir Kebonsari</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @media print {
@@ -21,7 +19,7 @@
 
     <div class="flex h-screen overflow-hidden">
         
-        <!-- SIDEBAR / MENU SAMPING -->
+        <!-- SIDEBAR / MENU -->
         <div class="w-64 bg-emerald-900 text-white flex flex-col no-print">
             <div class="p-5 text-lg font-bold border-b border-emerald-800 flex items-center space-x-3">
                 <i class="fa-solid fa-school text-yellow-400 text-2xl"></i>
@@ -53,14 +51,13 @@
             </nav>
 
             <div class="p-4 border-t border-emerald-800 text-xs text-emerald-300 text-center">
-                Aplikasi TU & Akademik v1.0
+                Aplikasi TU & Akademik v2.0
             </div>
         </div>
 
         <!-- KONTEN UTAMA -->
         <div class="flex-1 flex flex-col overflow-y-auto">
             
-            <!-- HEADER ATAS -->
             <header class="bg-white shadow-sm p-4 flex justify-between items-center px-8 no-print">
                 <h1 class="text-xl font-bold text-gray-800" id="judul-halaman">Dashboard Utama</h1>
                 <span class="text-sm font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
@@ -68,7 +65,6 @@
                 </span>
             </header>
 
-            <!-- ISI UTAMA -->
             <main class="p-8 space-y-6">
                 
                 <!-- KARTU STATISTIK -->
@@ -98,9 +94,13 @@
                     </div>
                 </div>
 
-                <!-- AREA CETAK / LEMBAR DOKUMEN -->
+                <!-- FORM INPUT DATA (MUNCUL SESUAI MENU) -->
+                <div id="form-container" class="bg-white p-6 rounded-xl shadow-sm border border-emerald-200 no-print">
+                    <!-- Form akan dimuat otomatis lewat Javascript -->
+                </div>
+
+                <!-- AREA CETAK / TABEL -->
                 <div id="print-area" class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
-                    <!-- KOP SURAT -->
                     <div class="text-center border-b-2 border-gray-800 pb-4 mb-6">
                         <h3 class="text-sm font-bold uppercase tracking-wider text-gray-600">YAYASAN PENDIDIKAN ISLAM</h3>
                         <h2 class="text-2xl font-extrabold uppercase text-emerald-900">MI DA'WATUL KHOIR KEBONSARI</h2>
@@ -111,14 +111,13 @@
                         SISTEM INFORMASI TATA USAHA & AKADEMIK TERPADU
                     </div>
 
-                    <!-- KONTEN TABEL DINAMIS -->
+                    <!-- KONTEN TABEL -->
                     <div id="konten-modul">
-                        <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200 text-sm space-y-2 text-emerald-900">
-                            <p><strong>Petunjuk:</strong> Klik menu di sebelah kiri (Data Pegawai, Absensi, Buku Induk, dll) untuk menampilkan tabel data secara otomatis.</p>
+                        <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200 text-sm text-emerald-900">
+                            <p><strong>Petunjuk:</strong> Pilih menu di sebelah kiri untuk mengisi data baru atau mencetak rekapitulasi data.</p>
                         </div>
                     </div>
 
-                    <!-- TANDA TANGAN -->
                     <div class="flex justify-between mt-12 text-sm">
                         <div class="text-center">
                             <p>Kepala Madrasah,</p>
@@ -134,7 +133,6 @@
                     </div>
                 </div>
 
-                <!-- TOMBOL CETAK -->
                 <div class="flex justify-end no-print">
                     <button onclick="window.print()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-6 py-3 rounded-xl shadow transition flex items-center space-x-2">
                         <i class="fa-solid fa-print"></i>
@@ -147,8 +145,7 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        // 👇 PASTIKAN URL INI ADALAH URL WEB APP APPS SCRIPT ANDA TERBARU 👇
-        const API_URL = "https://script.google.com/macros/s/AKfycbxGb-lKbDFR08A0E-X9fHxH6za8tA5rlo_y_-ymB037CIBw_XLoDhe8PjrnV20Pnimr/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbxbAEkBzwihIq-EvDWCWTC4F5jEwwPRxzQ7Afg5ZdSQg387g79udjOgQNJtLc_ZVaUs/exec";
 
         let cachePegawai = [];
         let cacheAbsensi = [];
@@ -164,49 +161,159 @@
 
             const judul = document.getElementById("judul-halaman");
             const infoModul = document.getElementById("info-modul-aktif");
+            const formContainer = document.getElementById("form-container");
 
             if(menu === 'dashboard') {
                 judul.innerText = "Dashboard Utama";
                 infoModul.innerText = "SISTEM INFORMASI TATA USAHA & AKADEMIK TERPADU";
-                document.getElementById("konten-modul").innerHTML = `<div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200 text-sm text-emerald-900">Pilih menu di samping untuk melihat data rekapitulasi madrasah.</div>`;
-            } else if(menu === 'pegawai') {
+                formContainer.innerHTML = `<p class="text-gray-600 text-sm">Silakan pilih menu di samping untuk mulai mengelola dan mengisi data.</p>`;
+                document.getElementById("konten-modul").innerHTML = `<div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200 text-sm text-emerald-900">Selamat datang di sistem pendataan terpadu madrasah.</div>`;
+            } 
+            else if(menu === 'pegawai') {
                 judul.innerText = "Data Pegawai / Guru";
                 infoModul.innerText = "REKAPITULASI DATA GURU & TENAGA KEPENDIDIKAN";
+                formContainer.innerHTML = `
+                    <h3 class="font-bold text-emerald-900 mb-3"><i class="fa-solid fa-user-plus mr-2"></i> Tambah Data Pegawai Baru</h3>
+                    <form id="formPegawai" onsubmit="kirimData(event, 'Pegawai')" class="grid grid-cols-1 md:grid-cols-4 gap-3 text-sm">
+                        <input type="text" name="id" placeholder="ID Pegawai" required class="border p-2 rounded">
+                        <input type="text" name="nama" placeholder="Nama Lengkap" required class="border p-2 rounded">
+                        <input type="text" name="nip" placeholder="NIP / NUPTK" required class="border p-2 rounded">
+                        <input type="text" name="jabatan" placeholder="Jabatan" required class="border p-2 rounded">
+                        <input type="text" name="status" placeholder="Status (Aktif/Cuti)" class="border p-2 rounded">
+                        <input type="text" name="ijazah" placeholder="Pendidikan Terakhir" class="border p-2 rounded">
+                        <input type="text" name="alamat" placeholder="Alamat" class="border p-2 rounded">
+                        <input type="text" name="nohp" placeholder="No HP / WA" class="border p-2 rounded">
+                        <button type="submit" class="md:col-span-4 bg-emerald-700 text-white font-bold p-2 rounded hover:bg-emerald-800">Simpan ke Spreadsheet</button>
+                    </form>`;
                 renderTabel(cachePegawai);
-            } else if(menu === 'absensi') {
+            } 
+            else if(menu === 'absensi') {
                 judul.innerText = "Absensi & Cuti Guru";
                 infoModul.innerText = "REKAPITULASI KEHADIRAN & CUTI PEGAWAI";
+                formContainer.innerHTML = `
+                    <h3 class="font-bold text-emerald-900 mb-3"><i class="fa-solid fa-calendar-check mr-2"></i> Catat Absensi / Cuti</h3>
+                    <form id="formAbsensi" onsubmit="kirimData(event, 'Absensi_Cuti')" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                        <input type="text" name="idabsen" placeholder="ID Absen" required class="border p-2 rounded">
+                        <input type="date" name="tanggal" required class="border p-2 rounded">
+                        <input type="text" name="nama" placeholder="Nama Pegawai" required class="border p-2 rounded">
+                        <select name="jenis" class="border p-2 rounded">
+                            <option value="Hadir">Hadir</option>
+                            <option value="Izin">Izin</option>
+                            <option value="Sakit">Sakit</option>
+                            <option value="Cuti">Cuti</option>
+                        </select>
+                        <input type="text" name="keterangan" placeholder="Keterangan" class="md:col-span-2 border p-2 rounded">
+                        <button type="submit" class="md:col-span-3 bg-emerald-700 text-white font-bold p-2 rounded hover:bg-emerald-800">Simpan Absensi</button>
+                    </form>`;
                 renderTabel(cacheAbsensi);
-            } else if(menu === 'bukuinduk') {
+            } 
+            else if(menu === 'bukuinduk') {
                 judul.innerText = "Buku Induk Siswa";
                 infoModul.innerText = "DATA PROFIL BUKU INDUK SISWA";
+                formContainer.innerHTML = `
+                    <h3 class="font-bold text-emerald-900 mb-3"><i class="fa-solid fa-user-graduate mr-2"></i> Tambah Data Siswa Baru</h3>
+                    <form id="formSiswa" onsubmit="kirimData(event, 'Siswa_Profil')" class="grid grid-cols-1 md:grid-cols-4 gap-3 text-sm">
+                        <input type="text" name="nisn" placeholder="NISN" required class="border p-2 rounded">
+                        <input type="text" name="nik" placeholder="NIK Siswa" required class="border p-2 rounded">
+                        <input type="text" name="nama" placeholder="Nama Lengkap Siswa" required class="border p-2 rounded">
+                        <select name="jk" class="border p-2 rounded"><option value="L">Laki-laki</option><option value="P">Perempuan</option></select>
+                        <input type="text" name="ttl" placeholder="Tempat, Tanggal Lahir" class="border p-2 rounded">
+                        <input type="text" name="kelas" placeholder="Kelas (Contoh: 1, 2, dll)" class="border p-2 rounded">
+                        <input type="text" name="tahun" placeholder="Tahun Masuk" class="border p-2 rounded">
+                        <input type="text" name="status" placeholder="Status (Aktif/Lulus)" class="border p-2 rounded">
+                        <input type="text" name="ortu" placeholder="Nama Orang Tua / Wali" class="border p-2 rounded">
+                        <input type="text" name="alamat" placeholder="Alamat Siswa" class="md:col-span-3 border p-2 rounded">
+                        <button type="submit" class="md:col-span-4 bg-emerald-700 text-white font-bold p-2 rounded hover:bg-emerald-800">Simpan Data Siswa</button>
+                    </form>`;
                 renderTabel(cacheSiswa);
-            } else if(menu === 'sts') {
+            } 
+            else if(menu === 'sts') {
                 judul.innerText = "Rapor STS (Sisipan)";
                 infoModul.innerText = "REKAP NILAI RAPOR TENGAH SEMESTER (STS)";
+                formContainer.innerHTML = `
+                    <h3 class="font-bold text-emerald-900 mb-3"><i class="fa-solid fa-file-pen mr-2"></i> Input Nilai STS</h3>
+                    <form id="formSts" onsubmit="kirimData(event, 'Siswa_STS')" class="grid grid-cols-1 md:grid-cols-4 gap-3 text-sm">
+                        <input type="text" name="tahun" placeholder="Tahun Ajaran (2026-2027)" required class="border p-2 rounded">
+                        <input type="text" name="semester" placeholder="Semester (GANJIL/GENAP)" required class="border p-2 rounded">
+                        <input type="text" name="nisn" placeholder="NISN Siswa" required class="border p-2 rounded">
+                        <input type="text" name="kelas" placeholder="Kelas" required class="border p-2 rounded">
+                        <input type="number" name="pai" placeholder="Nilai PAI" class="border p-2 rounded">
+                        <input type="number" name="indo" placeholder="Nilai B.Indo" class="border p-2 rounded">
+                        <input type="number" name="mtk" placeholder="Nilai MTK" class="border p-2 rounded">
+                        <input type="number" name="ipa" placeholder="Nilai IPA" class="border p-2 rounded">
+                        <input type="number" name="ips" placeholder="Nilai IPS" class="border p-2 rounded">
+                        <input type="number" name="rata" placeholder="Rata-rata" class="border p-2 rounded">
+                        <input type="text" name="catatan" placeholder="Catatan Wali Kelas" class="border p-2 rounded">
+                        <input type="text" name="wali" placeholder="Nama Wali Kelas" class="border p-2 rounded">
+                        <button type="submit" class="md:col-span-4 bg-emerald-700 text-white font-bold p-2 rounded hover:bg-emerald-800">Simpan Nilai STS</button>
+                    </form>`;
                 renderTabel(cacheSts);
-            } else if(menu === 'surat') {
+            } 
+            else if(menu === 'surat') {
                 judul.innerText = "Agenda Persuratan";
                 infoModul.innerText = "PENCATATAN AGENDA SURAT MASUK & KELUAR";
+                formContainer.innerHTML = `
+                    <h3 class="font-bold text-emerald-900 mb-3"><i class="fa-solid fa-envelope-circle-check mr-2"></i> Catat Surat Masuk / Keluar</h3>
+                    <form id="formSurat" onsubmit="kirimData(event, 'Persuratan')" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                        <input type="text" name="noagenda" placeholder="No Agenda" required class="border p-2 rounded">
+                        <select name="jenis" class="border p-2 rounded"><option value="Masuk">Surat Masuk</option><option value="Keluar">Surat Keluar</option></select>
+                        <input type="text" name="nosurat" placeholder="Nomor Surat" required class="border p-2 rounded">
+                        <input type="date" name="tanggal" required class="border p-2 rounded">
+                        <input type="text" name="pengirim" placeholder="Pengirim / Ditujukan Kepada" required class="border p-2 rounded">
+                        <input type="text" name="perihal" placeholder="Perihal Surat" required class="border p-2 rounded">
+                        <button type="submit" class="md:col-span-3 bg-emerald-700 text-white font-bold p-2 rounded hover:bg-emerald-800">Simpan Agenda Surat</button>
+                    </form>`;
                 renderTabel(cacheSurat);
             }
+        }
+
+        // Fungsi Kirim Data ke Spreadsheet
+        function kirimData(e, sheetName) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            let data = { sheetName: sheetName };
+            formData.forEach((value, key) => { data[key] = value; });
+
+            const btn = form.querySelector('button[type="submit"]');
+            btn.innerText = "Menyimpan...";
+            btn.disabled = true;
+
+            fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(res => {
+                if(res.status === 'success') {
+                    alert('Data berhasil disimpan ke Spreadsheet!');
+                    form.reset();
+                    ambilSemuaData(); // Refresh data otomatis
+                } else {
+                    alert('Gagal menyimpan: ' + res.message);
+                }
+                btn.innerText = "Simpan ke Spreadsheet";
+                btn.disabled = false;
+            })
+            .catch(err => {
+                alert('Terjadi kesalahan koneksi.');
+                btn.innerText = "Simpan ke Spreadsheet";
+                btn.disabled = false;
+            });
         }
 
         function renderTabel(data) {
             const konten = document.getElementById("konten-modul");
             if(!data || data.length <= 1) {
-                konten.innerHTML = `<p class="text-center py-6 text-gray-500">Belum ada data atau lembar spreadsheet masih kosong.</p>`;
+                konten.innerHTML = `<p class="text-center py-6 text-gray-500">Belum ada data pada lembar ini. Silakan isi form di atas.</p>`;
                 return;
             }
 
             let html = `<div class="overflow-x-auto"><table class="w-full border-collapse border border-gray-300 text-xs"><thead><tr class="bg-emerald-100 text-emerald-900">`;
-            
-            // Baris pertama dari spreadsheet sebagai Header Kolom
             const headers = data[0];
             headers.forEach(h => html += `<th class="border border-gray-300 p-2 text-left uppercase">${h}</th>`);
             html += `</tr></thead><tbody>`;
 
-            // Isi Data dari baris kedua ke bawah
             for(let i = 1; i < data.length; i++) {
                 html += `<tr class="hover:bg-gray-50">`;
                 data[i].forEach(cell => html += `<td class="border border-gray-300 p-2">${cell || '-'}</td>`);
@@ -229,7 +336,7 @@
             fetch(API_URL + "?action=getSiswaProfil").then(r => r.json()).then(d => {
                 cacheSiswa = d;
                 document.getElementById("total-siswa").innerText = (d.length > 1 ? d.length - 1 : 0) + " Siswa";
-                document.getElementById("status-koneksi").innerText = "Terhubung ke Google Sheets";
+                document.getElementById("status-koneksi").innerText = "Terhubung Aktif";
                 document.getElementById("status-koneksi").className = "text-sm font-bold text-emerald-600 mt-2";
             }).catch(() => {
                 document.getElementById("status-koneksi").innerText = "Koneksi Gagal";
