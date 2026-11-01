@@ -3,11 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Guru - SI-MADRASAH</title>
+    <title>Dashboard Guru - Rapor STS & Legger Kelas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @media print {
+            body * { visibility: hidden; }
+            #area-cetak, #area-cetak * { visibility: visible; }
+            #area-cetak { position: absolute; left: 0; top: 0; width: 100%; }
+            .no-print { display: none !important; }
+        }
+    </style>
     <script>
-        // Keamanan: Jika belum login sebagai guru, tendang kembali ke halaman login
         if (localStorage.getItem('status_login') !== 'GURU_AKTIF') {
             alert('Akses ditolak! Silakan login terlebih dahulu sebagai Guru.');
             window.location.href = 'login.html';
@@ -19,7 +26,7 @@
     <div class="flex h-screen overflow-hidden">
         
         <!-- SIDEBAR GURU -->
-        <div class="w-64 bg-emerald-900 text-white flex flex-col">
+        <div class="w-64 bg-emerald-900 text-white flex flex-col no-print">
             <div class="p-5 text-lg font-bold border-b border-emerald-800 flex items-center space-x-3">
                 <i class="fa-solid fa-chalkboard-user text-yellow-400 text-2xl"></i>
                 <div>
@@ -29,11 +36,14 @@
             </div>
             
             <nav class="flex-1 p-4 space-y-2 overflow-y-auto text-sm">
-                <a href="dashboard-guru.html" class="block p-3 rounded-lg bg-emerald-800 text-white font-medium">
-                    <i class="fa-solid fa-gauge w-6"></i> Beranda Guru
-                </a>
+                <button onclick="gantiTab('rapor')" id="menuRapor" class="w-full text-left p-3 rounded-lg bg-emerald-800 text-white font-medium transition flex items-center space-x-2">
+                    <i class="fa-solid fa-file-pen w-6"></i> <span>Form Rapor Siswa</span>
+                </button>
+                <button onclick="gantiTab('legger')" id="menuLegger" class="w-full text-left p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition flex items-center space-x-2">
+                    <i class="fa-solid fa-table-cells w-6"></i> <span>Legger & Peringkat Kelas</span>
+                </button>
                 <a href="index.html" target="_blank" class="block p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition">
-                    <i class="fa-solid fa-globe w-6"></i> Lihat Website Publik
+                    <i class="fa-solid fa-globe w-6"></i> Buka Website Publik
                 </a>
             </nav>
 
@@ -45,43 +55,296 @@
             </div>
         </div>
 
-        <!-- KONTEN UTAMA GURU -->
+        <!-- KONTEN UTAMA -->
         <div class="flex-1 flex flex-col overflow-y-auto">
-            <header class="bg-white shadow-sm p-4 flex justify-between items-center px-8">
-                <h1 class="text-xl font-bold text-gray-800">Portal Akademik & Wali Kelas</h1>
-                <span class="text-sm font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                    <i class="fa-solid fa-user-check mr-2"></i> Status: Login sebagai Dewan Guru
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center px-8 no-print">
+                <h1 id="judulHalaman" class="text-xl font-bold text-gray-800"><i class="fa-solid fa-award text-emerald-600 mr-2"></i> Pengolahan Rapor STS</h1>
+                <span id="infoGuruLogin" class="text-sm font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                    <i class="fa-solid fa-user-check mr-2"></i> Memuat Profil...
                 </span>
             </header>
 
             <main class="p-8 space-y-6">
-                <div class="bg-emerald-50 border-l-4 border-emerald-600 p-4 rounded-r-lg shadow-sm">
-                    <h2 class="font-bold text-emerald-900 text-lg">Selamat Datang, Bapak/Ibu Guru!</h2>
-                    <p class="text-sm text-emerald-700 mt-1">Gunakan panel ini untuk mengelola kehadiran siswa, pengisian nilai Rapor STS (sisipan), serta memantau perkembangan kelas binaan Anda.</p>
-                </div>
+                
+                <!-- KONTEN 1: FORM RAPOR SATUAN -->
+                <div id="sectionRapor" class="space-y-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-emerald-200 no-print space-y-4">
+                        <h3 class="font-bold text-emerald-900 text-md border-b pb-2"><i class="fa-solid fa-pen-to-square mr-2"></i> Input Nilai Siswa Satuan</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                            <div>
+                                <label class="block font-semibold text-gray-700 mb-1">Nama Siswa</label>
+                                <input type="text" id="inputNamaSiswa" value="Ahmad Fauzi" class="w-full border p-2.5 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-gray-700 mb-1">Tahun Pelajaran</label>
+                                <input type="text" id="inputTahun" value="2026/2027" class="w-full border p-2.5 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-gray-700 mb-1">Semester</label>
+                                <select id="inputSemester" class="w-full border p-2.5 rounded-lg">
+                                    <option value="Ganjil">Semester 1 (Ganjil)</option>
+                                    <option value="Genap">Semester 2 (Genap)</option>
+                                </select>
+                            </div>
+                        </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border">
-                        <div class="text-emerald-600 text-3xl mb-3"><i class="fa-solid fa-file-pen"></i></div>
-                        <h3 class="font-bold text-gray-800 text-lg">Input Nilai Rapor STS (RDM-Style)</h3>
-                        <p class="text-xs text-gray-500 mt-1 mb-4">Masukkan nilai mata pelajaran atau rekap nilai tengah semester siswa.</p>
-                        <a href="index.html" class="inline-block bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-emerald-800">Buka Modul STS</a>
+                        <h4 class="font-bold text-gray-700 text-xs uppercase tracking-wider pt-2">Nilai Mata Pelajaran (0 - 100):</h4>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                            <div><label class="block text-xs text-gray-600 mb-1">PAI</label><input type="number" id="valPai" value="85" class="w-full border p-2 rounded-lg"></div>
+                            <div><label class="block text-xs text-gray-600 mb-1">Bahasa Indonesia</label><input type="number" id="valIndo" value="80" class="w-full border p-2 rounded-lg"></div>
+                            <div><label class="block text-xs text-gray-600 mb-1">Matematika</label><input type="number" id="valMtk" value="78" class="w-full border p-2 rounded-lg"></div>
+                            <div><label class="block text-xs text-gray-600 mb-1">IPAS</label><input type="number" id="valIpas" value="82" class="w-full border p-2 rounded-lg"></div>
+                            <div><label class="block text-xs text-gray-600 mb-1">Pancasila</label><input type="number" id="valPpkn" value="88" class="w-full border p-2 rounded-lg"></div>
+                            <div><label class="block text-xs text-gray-600 mb-1">SBdP</label><input type="number" id="valSbdp" value="85" class="w-full border p-2 rounded-lg"></div>
+                            <div><label class="block text-xs text-gray-600 mb-1">PJOK</label><input type="number" id="valPjok" value="90" class="w-full border p-2 rounded-lg"></div>
+                            <div><label class="block text-xs text-gray-600 mb-1">Mulok / B. Arab</label><input type="number" id="valMulok" value="83" class="w-full border p-2 rounded-lg"></div>
+                        </div>
+
+                        <div class="pt-2">
+                            <label class="block font-semibold text-gray-700 mb-1 text-sm">Catatan Wali Kelas</label>
+                            <textarea id="inputCatatan" rows="2" class="w-full border p-2.5 rounded-lg text-sm">Pertahankan prestasimu dan tingkatkan terus belajarmu!</textarea>
+                        </div>
+
+                        <button onclick="generateRaporSTS()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold p-3 rounded-lg shadow transition flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-calculator"></i> <span>Proses Rapor</span>
+                        </button>
                     </div>
 
-                    <div class="bg-white p-6 rounded-xl shadow-sm border">
-                        <div class="text-emerald-600 text-3xl mb-3"><i class="fa-solid fa-clipboard-user"></i></div>
-                        <h3 class="font-bold text-gray-800 text-lg">Absensi Harian Kelas</h3>
-                        <p class="text-xs text-gray-500 mt-1 mb-4">Pencatatan kehadiran siswa dan rekap ketidakhadiran di kelas Anda.</p>
-                        <a href="index.html" class="inline-block bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-emerald-800">Buka Absensi</a>
+                    <div class="flex justify-between items-center no-print">
+                        <h2 class="font-bold text-gray-800 text-lg">Pratinjau Lembar Rapor STS:</h2>
+                        <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-lg shadow transition flex items-center space-x-2 text-sm">
+                            <i class="fa-solid fa-print"></i> <span>Cetak Rapor (PDF)</span>
+                        </button>
+                    </div>
+
+                    <!-- AREA CETAK RAPOR -->
+                    <div id="area-cetak" class="bg-white p-10 rounded-xl shadow-md border border-gray-300 max-w-4xl mx-auto text-gray-900" style="min-height: 850px;">
+                        <div class="text-center border-b-2 border-gray-800 pb-3 mb-4">
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-gray-600">YAYASAN PENDIDIKAN ISLAM DA'WATUL KHOIR</h3>
+                            <h2 class="text-xl font-black uppercase text-emerald-900">HASIL SUMATIF TENGAH SEMESTER (STS)</h2>
+                            <p class="text-xs font-semibold text-gray-700">MADRASAH IBTIDAIYAH DA'WATUL KHOIR KEBONSARI</p>
+                            <p class="text-[10px] text-gray-500">Tahun Pelajaran: <span id="outTahun">2026/2027</span> | Semester: <span id="outSemester">Ganjil</span></p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 text-xs bg-gray-50 p-3 rounded-lg border mb-4">
+                            <div>
+                                <p><strong>Nama Siswa:</strong> <span id="outNama" class="uppercase font-bold text-emerald-900"></span></p>
+                            </div>
+                            <div>
+                                <p><strong>Kelas:</strong> <span id="outKelasRapor" class="font-bold">Kelas 1</span></p>
+                            </div>
+                        </div>
+
+                        <table class="w-full border-collapse border border-gray-400 text-xs mb-4">
+                            <thead>
+                                <tr class="bg-emerald-900 text-white text-center">
+                                    <th class="border border-gray-400 p-2 w-12">No</th>
+                                    <th class="border border-gray-400 p-2 text-left">Mata Pelajaran</th>
+                                    <th class="border border-gray-400 p-2 w-24">Nilai</th>
+                                    <th class="border border-gray-400 p-2 w-48">Predikat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelNilaiBody"></tbody>
+                        </table>
+
+                        <div class="grid grid-cols-2 gap-4 text-xs bg-emerald-50 p-3 rounded-lg border border-emerald-200 mb-6">
+                            <div><p class="font-bold text-emerald-900 text-sm">Jumlah Nilai: <span id="outTotal">0</span></p></div>
+                            <div class="text-right"><p class="font-bold text-emerald-900 text-sm">Rata-rata: <span id="outRata">0</span></p></div>
+                        </div>
+
+                        <div class="border border-gray-400 p-3 rounded-lg text-xs mb-8">
+                            <p class="font-bold text-gray-700 mb-1">Catatan Wali Kelas:</p>
+                            <p id="outCatatan" class="italic text-gray-800"></p>
+                        </div>
+
+                        <div class="flex justify-between items-center text-xs px-6 pt-4">
+                            <div class="text-center">
+                                <p>Mengetahui,</p><p class="font-bold">Orang Tua / Wali Murid</p>
+                                <div class="h-16"></div><p class="border-b border-gray-800 w-36 mx-auto"></p>
+                            </div>
+                            <div class="text-center">
+                                <p>Kebonsari, <span id="tglCetak"></span></p><p class="font-bold">Wali Kelas,</p>
+                                <div class="h-16"></div>
+                                <p id="outWaliKelas" class="font-bold underline">Ustadz / Ustadzah</p>
+                                <p id="outJabatan" class="text-[10px] text-gray-600">Wali Kelas</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- KONTEN 2: LEGGER & PERINGKAT KELAS -->
+                <div id="sectionLegger" class="space-y-6 hidden">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-emerald-200 flex justify-between items-center no-print">
+                        <div>
+                            <h3 class="font-bold text-emerald-900 text-lg"><i class="fa-solid fa-ranking-star mr-2 text-yellow-500"></i> Buku Legger & Peringkat Kelas</h3>
+                            <p class="text-xs text-gray-500">Rekapitulasi nilai seluruh siswa lengkap dengan urutan peringkat (ranking) kelas secara otomatis.</p>
+                        </div>
+                        <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg shadow text-sm">
+                            <i class="fa-solid fa-print mr-2"></i> Cetak Legger
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-md border overflow-x-auto">
+                        <div class="text-center pb-4 mb-4 border-b">
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-gray-600">REKAPITULASI LEGGER NILAI SISWA</h3>
+                            <h2 id="leggerJudulKelas" class="text-lg font-black uppercase text-emerald-900">KELAS BINAAN</h2>
+                            <p class="text-xs text-gray-500">Tahun Pelajaran 2026/2027</p>
+                        </div>
+
+                        <table class="w-full border-collapse border border-gray-400 text-xs">
+                            <thead>
+                                <tr class="bg-emerald-900 text-white text-center">
+                                    <th class="border border-gray-400 p-2">Peringkat</th>
+                                    <th class="border border-gray-400 p-2 text-left">Nama Siswa</th>
+                                    <th class="border border-gray-400 p-2">PAI</th>
+                                    <th class="border border-gray-400 p-2">B.Indo</th>
+                                    <th class="border border-gray-400 p-2">Mtk</th>
+                                    <th class="border border-gray-400 p-2">IPAS</th>
+                                    <th class="border border-gray-400 p-2">PPKn</th>
+                                    <th class="border border-gray-400 p-2">SBdP</th>
+                                    <th class="border border-gray-400 p-2">PJOK</th>
+                                    <th class="border border-gray-400 p-2">Mulok</th>
+                                    <th class="border border-gray-400 p-2 bg-emerald-800">Jumlah</th>
+                                    <th class="border border-gray-400 p-2 bg-emerald-800">Rata-rata</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelLeggerBody">
+                                <!-- Data contoh siswa otomatis disusun berdasarkan peringkat -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </main>
         </div>
     </div>
 
     <script>
+        // Simulasi database data siswa sekelas untuk Legger & Peringkat
+        let dataSiswaKelas = [
+            { nama: "Ahmad Fauzi", pai: 85, indo: 80, mtk: 78, ipas: 82, ppkn: 88, sbdp: 85, pjok: 90, mulok: 83 },
+            { nama: "Siti Aminah", pai: 92, indo: 90, mtk: 85, ipas: 88, ppkn: 90, sbdp: 88, pjok: 85, mulok: 90 },
+            { nama: "Muhammad Zaki", pai: 78, indo: 75, mtk: 70, ipas: 76, ppkn: 80, sbdp: 75, pjok: 80, mulok: 75 },
+            { nama: "Dewi Lestari", pai: 95, indo: 92, mtk: 90, ipas: 94, ppkn: 92, sbdp: 90, pjok: 88, mulok: 92 },
+            { nama: "Rizki Pratama", pai: 80, indo: 82, mtk: 80, ipas: 85, ppkn: 82, sbdp: 80, pjok: 85, mulok: 80 }
+        ];
+
+        window.onload = function() {
+            const namaGuru = localStorage.getItem('nama_guru_aktif') || "Dewan Guru";
+            const kelasGuru = localStorage.getItem('kelas_guru_aktif') || "Wali Kelas 1";
+
+            document.getElementById('infoGuruLogin').innerHTML = `<i class="fa-solid fa-user-check mr-2"></i> ${namaGuru} (${kelasGuru})`;
+            document.getElementById('outWaliKelas').innerText = namaGuru;
+            document.getElementById('outJabatan').innerText = kelasGuru;
+            document.getElementById('outKelasRapor').innerText = kelasGuru;
+            document.getElementById('leggerJudulKelas').innerText = "BINAAN: " + kelasGuru;
+            document.getElementById('tglCetak').innerText = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            generateRaporSTS();
+            muatLeggerDanPeringkat();
+        }
+
+        function gantiTab(tab) {
+            const secRapor = document.getElementById('sectionRapor');
+            const secLegger = document.getElementById('sectionLegger');
+            const menuRapor = document.getElementById('menuRapor');
+            const menuLegger = document.getElementById('menuLegger');
+            const judul = document.getElementById('judulHalaman');
+
+            if (tab === 'rapor') {
+                secRapor.classList.remove('hidden');
+                secLegger.classList.add('hidden');
+                menuRapor.className = "w-full text-left p-3 rounded-lg bg-emerald-800 text-white font-medium transition flex items-center space-x-2";
+                menuLegger.className = "w-full text-left p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition flex items-center space-x-2";
+                judul.innerHTML = '<i class="fa-solid fa-award text-emerald-600 mr-2"></i> Pengolahan Rapor STS';
+            } else {
+                secRapor.classList.add('hidden');
+                secLegger.classList.remove('hidden');
+                menuLegger.className = "w-full text-left p-3 rounded-lg bg-emerald-800 text-white font-medium transition flex items-center space-x-2";
+                menuRapor.className = "w-full text-left p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition flex items-center space-x-2";
+                judul.innerHTML = '<i class="fa-solid fa-table-cells text-emerald-600 mr-2"></i> Buku Legger & Peringkat Kelas';
+            }
+        }
+
+        function generateRaporSTS() {
+            const nama = document.getElementById('inputNamaSiswa').value || "Ahmad Fauzi";
+            const tahun = document.getElementById('inputTahun').value;
+            const semester = document.getElementById('inputSemester').value;
+            const catatan = document.getElementById('inputCatatan').value;
+
+            document.getElementById('outNama').innerText = nama;
+            document.getElementById('outTahun').innerText = tahun;
+            document.getElementById('outSemester').innerText = semester;
+            document.getElementById('outCatatan').innerText = catatan;
+
+            const mapel = [
+                { nama: "Pendidikan Agama Islam (PAI)", val: parseFloat(document.getElementById('valPai').value) || 0 },
+                { nama: "Bahasa Indonesia", val: parseFloat(document.getElementById('valIndo').value) || 0 },
+                { nama: "Matematika", val: parseFloat(document.getElementById('valMtk').value) || 0 },
+                { nama: "IPAS", val: parseFloat(document.getElementById('valIpas').value) || 0 },
+                { nama: "Pendidikan Pancasila", val: parseFloat(document.getElementById('valPpkn').value) || 0 },
+                { nama: "Seni Budaya (SBdP)", val: parseFloat(document.getElementById('valSbdp').value) || 0 },
+                { nama: "PJOK", val: parseFloat(document.getElementById('valPjok').value) || 0 },
+                { nama: "Mulok / Bahasa Arab", val: parseFloat(document.getElementById('valMulok').value) || 0 }
+            ];
+
+            let tbody = "";
+            let total = 0;
+            mapel.forEach((m, idx) => {
+                total += m.val;
+                let pred = m.val >= 85 ? "Sangat Baik (A)" : (m.val >= 75 ? "Baik (B)" : "Cukup (C)");
+                tbody += `<tr><td class="border border-gray-400 p-2 text-center">${idx+1}</td><td class="border border-gray-400 p-2">${m.nama}</td><td class="border border-gray-400 p-2 text-center font-bold">${m.val}</td><td class="border border-gray-400 p-2 text-center">${pred}</td></tr>`;
+            });
+
+            document.getElementById('tabelNilaiBody').innerHTML = tbody;
+            document.getElementById('outTotal').innerText = total;
+            document.getElementById('outRata').innerText = (total / mapel.length).toFixed(1);
+        }
+
+        function muatLeggerDanPeringkat() {
+            // Hitung total dan rata-rata untuk setiap siswa
+            dataSiswaKelas.forEach(s => {
+                s.total = s.pai + s.indo + s.mtk + s.ipas + s.ppkn + s.sbdp + s.pjok + s.mulok;
+                s.rata = (s.total / 8).toFixed(1);
+            });
+
+            // Urutkan siswa berdasarkan total nilai tertinggi ke terendah (Peringkat otomatis)
+            dataSiswaKelas.sort((a, b) => b.total - a.total);
+
+            let htmlLegger = "";
+            dataSiswaKelas.forEach((s, idx) => {
+                let badgeRank = "";
+                if(idx === 0) badgeRank = '<span class="bg-yellow-400 text-yellow-900 px-2 py-0.5 rounded-full font-bold">1 🏆</span>';
+                else if(idx === 1) badgeRank = '<span class="bg-gray-300 text-gray-800 px-2 py-0.5 rounded-full font-bold">2 🥈</span>';
+                else if(idx === 2) badgeRank = '<span class="bg-amber-600 text-white px-2 py-0.5 rounded-full font-bold">3 🥉</span>';
+                else badgeRank = (idx + 1);
+
+                htmlLegger += `
+                    <tr class="text-center hover:bg-gray-50">
+                        <td class="border border-gray-400 p-2 font-bold">${badgeRank}</td>
+                        <td class="border border-gray-400 p-2 text-left font-semibold">${s.nama}</td>
+                        <td class="border border-gray-400 p-2">${s.pai}</td>
+                        <td class="border border-gray-400 p-2">${s.indo}</td>
+                        <td class="border border-gray-400 p-2">${s.mtk}</td>
+                        <td class="border border-gray-400 p-2">${s.ipas}</td>
+                        <td class="border border-gray-400 p-2">${s.ppkn}</td>
+                        <td class="border border-gray-400 p-2">${s.sbdp}</td>
+                        <td class="border border-gray-400 p-2">${s.pjok}</td>
+                        <td class="border border-gray-400 p-2">${s.mulok}</td>
+                        <td class="border border-gray-400 p-2 font-bold bg-emerald-50">${s.total}</td>
+                        <td class="border border-gray-400 p-2 font-bold bg-emerald-50">${s.rata}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('tabelLeggerBody').innerHTML = htmlLegger;
+        }
+
         function logout() {
             localStorage.removeItem('status_login');
+            localStorage.removeItem('nama_guru_aktif');
+            localStorage.removeItem('kelas_guru_aktif');
             alert('Anda telah keluar dari sistem.');
             window.location.href = 'login.html';
         }
