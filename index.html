@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SI-MADRASAH - MI Da'watul Khoir Kebonsari</title>
-    <!-- Tailwind CSS untuk Desain Modern -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome untuk Ikon -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @media print {
@@ -27,29 +27,29 @@
                 <i class="fa-solid fa-school text-yellow-400 text-2xl"></i>
                 <div>
                     <span>MI DA'WATUL KHOIR</span>
-                    <span class="block text-xs font-normal text-emerald-300">Kebonsari, Jember</span>
+                    <span class="block text-xs font-normal text-emerald-300">Kebonsari, Lumajang</span>
                 </div>
             </div>
             
             <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-                <a href="#dashboard" onclick="gantiMenu('dashboard')" class="block p-3 rounded-lg bg-emerald-800 text-white font-medium transition">
+                <button onclick="gantiMenu('dashboard')" id="nav-dashboard" class="w-full text-left p-3 rounded-lg bg-emerald-800 text-white font-medium transition flex items-center">
                     <i class="fa-solid fa-gauge w-6"></i> Dashboard Utama
-                </a>
-                <a href="#pegawai" onclick="gantiMenu('pegawai')" class="block p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition">
+                </button>
+                <button onclick="gantiMenu('pegawai')" id="nav-pegawai" class="w-full text-left p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition flex items-center">
                     <i class="fa-solid fa-user-tie w-6"></i> Data Pegawai / Guru
-                </a>
-                <a href="#absensi" onclick="gantiMenu('absensi')" class="block p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition">
+                </button>
+                <button onclick="gantiMenu('absensi')" id="nav-absensi" class="w-full text-left p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition flex items-center">
                     <i class="fa-solid fa-clipboard-user w-6"></i> Absensi & Cuti Guru
-                </a>
-                <a href="#bukuinduk" onclick="gantiMenu('bukuinduk')" class="block p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition">
+                </button>
+                <button onclick="gantiMenu('bukuinduk')" id="nav-bukuinduk" class="w-full text-left p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition flex items-center">
                     <i class="fa-solid fa-address-book w-6"></i> Buku Induk Siswa
-                </a>
-                <a href="#sts" onclick="gantiMenu('sts')" class="block p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition">
+                </button>
+                <button onclick="gantiMenu('sts')" id="nav-sts" class="w-full text-left p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition flex items-center">
                     <i class="fa-solid fa-file-lines w-6"></i> Rapor STS (Sisipan)
-                </a>
-                <a href="#surat" onclick="gantiMenu('surat')" class="block p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition">
+                </button>
+                <button onclick="gantiMenu('surat')" id="nav-surat" class="w-full text-left p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition flex items-center">
                     <i class="fa-solid fa-envelope w-6"></i> Agenda Persuratan
-                </a>
+                </button>
             </nav>
 
             <div class="p-4 border-t border-emerald-800 text-xs text-emerald-300 text-center">
@@ -64,15 +64,15 @@
             <header class="bg-white shadow-sm p-4 flex justify-between items-center px-8 no-print">
                 <h1 class="text-xl font-bold text-gray-800" id="judul-halaman">Dashboard Utama</h1>
                 <span class="text-sm font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                    <i class="fa-regular fa-calendar-days mr-2"></i> Multi-Tahun Ajaran
+                    <i class="fa-regular fa-calendar-days mr-2"></i> T.P 2026/2027
                 </span>
             </header>
 
             <!-- ISI UTAMA -->
             <main class="p-8 space-y-6">
                 
-                <!-- KARTU STATISTIK (ANGKA DITARIK OTOMATIS DARI GOOGLE SHEETS) -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- KARTU STATISTIK -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 no-print">
                     <div class="bg-white p-5 rounded-xl shadow-sm border flex items-center justify-between">
                         <div>
                             <p class="text-xs font-semibold text-gray-400 uppercase">Total Pegawai & Guru</p>
@@ -100,6 +100,7 @@
 
                 <!-- AREA CETAK / LEMBAR DOKUMEN -->
                 <div id="print-area" class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
+                    <!-- KOP SURAT -->
                     <div class="text-center border-b-2 border-gray-800 pb-4 mb-6">
                         <h3 class="text-sm font-bold uppercase tracking-wider text-gray-600">YAYASAN PENDIDIKAN ISLAM</h3>
                         <h2 class="text-2xl font-extrabold uppercase text-emerald-900">MI DA'WATUL KHOIR KEBONSARI</h2>
@@ -110,10 +111,14 @@
                         SISTEM INFORMASI TATA USAHA & AKADEMIK TERPADU
                     </div>
 
-                    <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200 text-sm space-y-2 text-emerald-900">
-                        <p><strong>Petunjuk:</strong> Pilih menu di sebelah kiri untuk berpindah modul. Gunakan tombol cetak di bawah untuk mencetak dokumen resmi madrasah.</p>
+                    <!-- KONTEN TABEL DINAMIS -->
+                    <div id="konten-modul">
+                        <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200 text-sm space-y-2 text-emerald-900">
+                            <p><strong>Petunjuk:</strong> Klik menu di sebelah kiri (Data Pegawai, Absensi, Buku Induk, dll) untuk menampilkan tabel data secara otomatis.</p>
+                        </div>
                     </div>
 
+                    <!-- TANDA TANGAN -->
                     <div class="flex justify-between mt-12 text-sm">
                         <div class="text-center">
                             <p>Kepala Madrasah,</p>
@@ -121,7 +126,7 @@
                             <p class="font-semibold underline">( ........................................ )</p>
                         </div>
                         <div class="text-center">
-                            <p>Kebonsari, <span id="tanggal-hari-ini">2026</span></p>
+                            <p>Kebonsari, <span id="tanggal-hari-ini"></span></p>
                             <p>Staf Tata Usaha</p>
                             <div class="h-16"></div>
                             <p class="font-semibold underline">( ........................................ )</p>
@@ -140,89 +145,105 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT: TARUH URL APPS SCRIPT ANDA DI BAWAH INI -->
+    <!-- JAVASCRIPT -->
     <script>
-        // 👇 TEMPELKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI DALAM TANDA PETIK DI BAWAH INI 👇
-        const API_URL = "https://script.google.com/macros/s/AKfycbyuCnp8nVPKE7zAmqMh_nnHNxl6AjA1VOyYBqxnhojuHAhvY3ZaOc-3nX6iUcytOIcp/exec";
+        // 👇 PASTIKAN URL INI ADALAH URL WEB APP APPS SCRIPT ANDA TERBARU 👇
+        const API_URL = "https://script.google.com/macros/s/AKfycbxGb-lKbDFR08A0E-X9fHxH6za8tA5rlo_y_-ymB037CIBw_XLoDhe8PjrnV20Pnimr/exec";
 
-        // Fungsi interaksi klik menu samping
+        let cachePegawai = [];
+        let cacheAbsensi = [];
+        let cacheSiswa = [];
+        let cacheSts = [];
+        let cacheSurat = [];
+
         function gantiMenu(menu) {
+            document.querySelectorAll("nav button").forEach(btn => {
+                btn.className = "w-full text-left p-3 rounded-lg hover:bg-emerald-800 text-emerald-200 transition flex items-center";
+            });
+            document.getElementById("nav-" + menu).className = "w-full text-left p-3 rounded-lg bg-emerald-800 text-white font-medium transition flex items-center";
+
             const judul = document.getElementById("judul-halaman");
             const infoModul = document.getElementById("info-modul-aktif");
-            
+
             if(menu === 'dashboard') {
                 judul.innerText = "Dashboard Utama";
                 infoModul.innerText = "SISTEM INFORMASI TATA USAHA & AKADEMIK TERPADU";
+                document.getElementById("konten-modul").innerHTML = `<div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200 text-sm text-emerald-900">Pilih menu di samping untuk melihat data rekapitulasi madrasah.</div>`;
             } else if(menu === 'pegawai') {
                 judul.innerText = "Data Pegawai / Guru";
-                infoModul.innerText = "MANAJEMEN DATA GURU & TENAGA KEPENDIDIKAN";
+                infoModul.innerText = "REKAPITULASI DATA GURU & TENAGA KEPENDIDIKAN";
+                renderTabel(cachePegawai);
             } else if(menu === 'absensi') {
                 judul.innerText = "Absensi & Cuti Guru";
-                infoModul.innerText = "REKAPITULASI KEHADIRAN, IZIN, DAN CUTI PEGAWAI";
+                infoModul.innerText = "REKAPITULASI KEHADIRAN & CUTI PEGAWAI";
+                renderTabel(cacheAbsensi);
             } else if(menu === 'bukuinduk') {
                 judul.innerText = "Buku Induk Siswa";
-                infoModul.innerText = "BUKU INDUK SISWA LINTAS TAHUN AJARAN KELAS 1 SAMPAI 6";
+                infoModul.innerText = "DATA PROFIL BUKU INDUK SISWA";
+                renderTabel(cacheSiswa);
             } else if(menu === 'sts') {
                 judul.innerText = "Rapor STS (Sisipan)";
-                infoModul.innerText = "PENCETAKAN & PENGISIAN RAPOR TENGAH SEMESTER (STS)";
+                infoModul.innerText = "REKAP NILAI RAPOR TENGAH SEMESTER (STS)";
+                renderTabel(cacheSts);
             } else if(menu === 'surat') {
                 judul.innerText = "Agenda Persuratan";
-                infoModul.innerText = "AGENDA PENCATATAN SURAT MASUK DAN KELUAR MADRASAH";
+                infoModul.innerText = "PENCATATAN AGENDA SURAT MASUK & KELUAR";
+                renderTabel(cacheSurat);
             }
         }
 
-        // Fungsi Ambil Data Pegawai dari Google Sheets
-        function muatDataPegawai() {
-            if(!API_URL.startsWith("https://")) {
-                document.getElementById("total-pegawai").innerText = "URL Belum Diisi!";
+        function renderTabel(data) {
+            const konten = document.getElementById("konten-modul");
+            if(!data || data.length <= 1) {
+                konten.innerHTML = `<p class="text-center py-6 text-gray-500">Belum ada data atau lembar spreadsheet masih kosong.</p>`;
                 return;
             }
 
-            fetch(API_URL + "?action=getPegawai")
-                .then(response => response.json())
-                .then(data => {
-                    const jumlah = data.length > 1 ? data.length - 1 : 0;
-                    document.getElementById("total-pegawai").innerText = jumlah + " Orang";
-                })
-                .catch(err => {
-                    console.error("Error Pegawai:", err);
-                    document.getElementById("total-pegawai").innerText = "Gagal Dimuat";
-                });
+            let html = `<div class="overflow-x-auto"><table class="w-full border-collapse border border-gray-300 text-xs"><thead><tr class="bg-emerald-100 text-emerald-900">`;
+            
+            // Baris pertama dari spreadsheet sebagai Header Kolom
+            const headers = data[0];
+            headers.forEach(h => html += `<th class="border border-gray-300 p-2 text-left uppercase">${h}</th>`);
+            html += `</tr></thead><tbody>`;
+
+            // Isi Data dari baris kedua ke bawah
+            for(let i = 1; i < data.length; i++) {
+                html += `<tr class="hover:bg-gray-50">`;
+                data[i].forEach(cell => html += `<td class="border border-gray-300 p-2">${cell || '-'}</td>`);
+                html += `</tr>`;
+            }
+            html += `</tbody></table></div>`;
+            konten.innerHTML = html;
         }
 
-        // Fungsi Ambil Data Siswa dari Google Sheets
-        function muatDataSiswa() {
-            if(!API_URL.startsWith("https://")) {
-                document.getElementById("total-siswa").innerText = "URL Belum Diisi!";
-                document.getElementById("status-koneksi").innerText = "URL Apps Script Kosong!";
+        function ambilSemuaData() {
+            if(!API_URL.startsWith("https://")) return;
+
+            fetch(API_URL + "?action=getPegawai").then(r => r.json()).then(d => {
+                cachePegawai = d;
+                document.getElementById("total-pegawai").innerText = (d.length > 1 ? d.length - 1 : 0) + " Orang";
+            }).catch(() => {});
+
+            fetch(API_URL + "?action=getAbsensi").then(r => r.json()).then(d => { cacheAbsensi = d; }).catch(() => {});
+
+            fetch(API_URL + "?action=getSiswaProfil").then(r => r.json()).then(d => {
+                cacheSiswa = d;
+                document.getElementById("total-siswa").innerText = (d.length > 1 ? d.length - 1 : 0) + " Siswa";
+                document.getElementById("status-koneksi").innerText = "Terhubung ke Google Sheets";
+                document.getElementById("status-koneksi").className = "text-sm font-bold text-emerald-600 mt-2";
+            }).catch(() => {
+                document.getElementById("status-koneksi").innerText = "Koneksi Gagal";
                 document.getElementById("status-koneksi").className = "text-sm font-bold text-red-600 mt-2";
-                return;
-            }
+            });
 
-            fetch(API_URL + "?action=getSiswa")
-                .then(response => response.json())
-                .then(data => {
-                    const jumlah = data.length > 1 ? data.length - 1 : 0;
-                    document.getElementById("total-siswa").innerText = jumlah + " Siswa";
-                    document.getElementById("status-koneksi").innerText = "Terhubung ke Google Sheets";
-                    document.getElementById("status-koneksi").className = "text-sm font-bold text-emerald-600 mt-2";
-                })
-                .catch(err => {
-                    console.error("Error Siswa:", err);
-                    document.getElementById("total-siswa").innerText = "Gagal Dimuat";
-                    document.getElementById("status-koneksi").innerText = "Koneksi Gagal / Diblokir";
-                    document.getElementById("status-koneksi").className = "text-sm font-bold text-red-600 mt-2";
-                });
+            fetch(API_URL + "?action=getSiswaSts").then(r => r.json()).then(d => { cacheSts = d; }).catch(() => {});
+
+            fetch(API_URL + "?action=getPersuratan").then(r => r.json()).then(d => { cacheSurat = d; }).catch(() => {});
         }
 
-        // Dijalankan otomatis saat halaman dibuka
         window.onload = function() {
-            muatDataPegawai();
-            muatDataSiswa();
-
-            // Tanggal otomatis
-            const tgl = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-            document.getElementById("tanggal-hari-ini").innerText = tgl;
+            ambilSemuaData();
+            document.getElementById("tanggal-hari-ini").innerText = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
         };
     </script>
 </body>
