@@ -15,17 +15,10 @@
         }
     </style>
     <script>
-    // URL Web App Google Apps Script Anda
-    const API_URL = "https://script.google.com/macros/s/AKfycbx5K4AXkv-VW-AdtCGFmXtDMvIDPhsqIkVm4DfaYrjLuVP0PJFtBPJEKKU6Ej12O7Zy/exec";
+        // URL Web App Google Apps Script Anda
+        const API_URL = "https://script.google.com/macros/s/AKfycbx5K4AXkv-VW-AdtCGFmXtDMvIDPhsqIkVm4DfaYrjLuVP0PJFtBPJEKKU6Ej12O7Zy/exec";
 
-    // Keamanan: Jika belum login, lempar kembali ke halaman login
-    if (localStorage.getItem('status_login') !== 'TU_AKTIF') {
-        alert('Akses ditolak! Silakan login terlebih dahulu.');
-        window.location.href = 'login.html';
-    }
-</script>
-    <script>
-        
+        // Keamanan: Jika belum login, lempar kembali ke halaman login
         if (localStorage.getItem('status_login') !== 'TU_AKTIF') {
             alert('Akses ditolak! Silakan login terlebih dahulu.');
             window.location.href = 'login.html';
@@ -136,12 +129,12 @@
                     <div class="flex items-center justify-between border-b-4 border-double border-gray-900 pb-4 mb-6">
                         <img src="logo-madrasah.png" alt="Logo" class="w-20 h-20 object-contain">
                         <div class="text-center flex-1 px-4">
-                            <h3 class="text-sm font-bold uppercase tracking-wider text-gray-700">YAYASAN PENDIDIKAN ISLAM DA'WATUL KHOIR</h3>
-                            <h2 class="text-2xl font-black uppercase text-emerald-900 tracking-wide">MI DA'WATUL KHOIR KEBONSARI</h2>
-                            <p class="text-xs text-gray-600 mt-1">NSM: 111235080000 | NPSN: 60700000</p>
-                            <p class="text-xs text-gray-500">Jl. Raya Kebonsari, Kec. Sumbersuko, Kab. Lumajang, Jawa Timur 67316</p>
+                            <h3 id="outYayasan" class="text-sm font-bold uppercase tracking-wider text-gray-700">YAYASAN PENDIDIKAN ISLAM DA'WATUL KHOIR</h3>
+                            <h2 id="outLembaga" class="text-2xl font-black uppercase text-emerald-900 tracking-wide">MI DA'WATUL KHOIR KEBONSARI</h2>
+                            <p class="text-xs text-gray-600 mt-1">NSM: <span id="outNsm">111235080000</span> | NPSN: <span id="outNpsn">60700000</span></p>
+                            <p id="outAlamat" class="text-xs text-gray-500">Jl. Raya Kebonsari, Kec. Sumbersuko, Kab. Lumajang, Jawa Timur 67316</p>
                         </div>
-                        <div class="w-20"></div> <!-- Penyeimbang logo -->
+                        <div class="w-20"></div>
                     </div>
 
                     <!-- ISI SURAT DINAMIS -->
@@ -149,14 +142,14 @@
                         <div class="text-center font-bold text-base underline uppercase" id="judulSurat">SURAT KETERANGAN MUTASI SISWA</div>
                         <div class="text-center text-xs text-gray-600 -mt-3" id="teksNoSurat">Nomor: 045/MI.DK/11/2026</div>
 
-                        <p class="pt-4">Yang bertanda tangan di bawah ini Kepala MI Da'watul Khoir Kebonsari, Kecamatan Sumbersuko, Kabupaten Lumajang, menerangkan dengan sebenarnya bahwa:</p>
+                        <p class="pt-4">Yang bertanda tangan di bawah ini Kepala <span id="outNamaLembagaText">MI Da'watul Khoir Kebonsari</span>, Kecamatan Sumbersuko, Kabupaten Lumajang, menerangkan dengan sebenarnya bahwa:</p>
 
                         <table class="w-full my-4 ml-6 text-sm">
                             <tr><td class="w-40 font-semibold py-1">Nama Siswa</td><td>: <span id="outNama" class="font-bold uppercase">ACHMAD FAUZI</span></td></tr>
                             <tr><td class="font-semibold py-1">Perihal / Alasan</td><td>: <span id="outPerihal">Pindah Sekolah</span></td></tr>
                         </table>
 
-                        <p>Bahwa nama yang bersangkutan betul-betul murid MI Da'watul Khoir Kebonsari dan telah resmi mengajukan permohonan mutasi/pindah. Demikian surat keterangan ini dibuat untuk dipergunakan sebagaimana mestinya.</p>
+                        <p>Bahwa nama yang bersangkutan betul-betul murid <span id="outNamaLembagaText2">MI Da'watul Khoir Kebonsari</span> dan telah resmi mengajukan permohonan mutasi/pindah. Demikian surat keterangan ini dibuat untuk dipergunakan sebagaimana mestinya.</p>
                     </div>
 
                     <!-- TANDA TANGAN & STEMPEL -->
@@ -167,17 +160,15 @@
                             
                             <!-- AREA STEMPEL & TTD -->
                             <div class="h-24 my-2 relative flex items-center justify-center">
-                                <!-- Stempel Gambar / Lingkaran Simulasi -->
                                 <div id="imgStempel" class="absolute -left-4 w-24 h-24 border-4 border-dashed border-emerald-600 rounded-full flex items-center justify-center text-emerald-600 font-bold text-xs opacity-80 transform -rotate-12">
                                     STEMPEL<br>MADRASAH
                                 </div>
-                                <!-- Tanda Tangan -->
                                 <div id="imgTtd" class="font-serif italic text-xl font-bold text-blue-900 border-b-2 border-blue-900 px-4 py-1 transform -rotate-3">
                                     Achmad Taufiq, S.Pd.I
                                 </div>
                             </div>
 
-                            <p class="font-bold underline text-sm">ACHMAD TAUFIQ, S.Pd.I</p>
+                            <p id="outKepala" class="font-bold underline text-sm">ACHMAD TAUFIQ, S.Pd.I</p>
                             <p class="text-xs text-gray-600">NIP. 19850101 201001 1 001</p>
                         </div>
                     </div>
@@ -187,6 +178,37 @@
     </div>
 
     <script>
+        // Ambil Data Profil Lembaga dari Google Spreadsheet saat halaman dimuat
+        window.onload = function() {
+            document.getElementById('tglSurat').innerText = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            muatProfilLembaga();
+        }
+
+        function muatProfilLembaga() {
+            fetch(API_URL + "?action=getProfilLembaga")
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.length > 1) {
+                        // Baris 1 adalah header, data ada di baris 2 (indeks 1)
+                        const row = data[1];
+                        if(row[0]) document.getElementById('outYayasan').innerText = row[0];
+                        if(row[1]) {
+                            document.getElementById('outLembaga').innerText = row[1];
+                            document.getElementById('outNamaLembagaText').innerText = row[1];
+                            document.getElementById('outNamaLembagaText2').innerText = row[1];
+                        }
+                        if(row[2]) document.getElementById('outNsm').innerText = row[2];
+                        if(row[3]) document.getElementById('outNpsn').innerText = row[3];
+                        if(row[4]) {
+                            let alamatLengkap = "Jl. " + row[4] + ", Kec. " + (row[5]||'') + ", Kab. " + (row[6]||'');
+                            document.getElementById('outAlamat').innerText = alamatLengkap;
+                        }
+                        if(row[7]) document.getElementById('outKepala').innerText = row[7];
+                    }
+                })
+                .catch(err => console.log("Gagal memuat profil lembaga:", err));
+        }
+
         function buatSuratOtomatis() {
             const jenis = document.getElementById('jenisSurat').value;
             const noSurat = document.getElementById('noSurat').value;
@@ -205,19 +227,14 @@
                 document.getElementById('judulSurat').innerText = "SURAT UNDANGAN RESMI";
             }
 
-            // Atur TTD dan Stempel
             document.getElementById('imgTtd').style.display = document.getElementById('pakaiTtd').checked ? 'block' : 'none';
             document.getElementById('imgStempel').style.display = document.getElementById('pakaiStempel').checked ? 'flex' : 'none';
         }
 
         function logout() {
             localStorage.removeItem('status_login');
-            alert('Anda telah keluar dari sistem.');
+            alert('Andalah keluar dari sistem.');
             window.location.href = 'login.html';
-        }
-
-        window.onload = function() {
-            document.getElementById('tglSurat').innerText = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
         }
     </script>
 </body>
